@@ -1,0 +1,2 @@
+rootProject.name='Android_Basic_Recyclerview'
+include ':app'
