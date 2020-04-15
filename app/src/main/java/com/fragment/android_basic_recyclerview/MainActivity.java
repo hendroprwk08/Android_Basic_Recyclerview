@@ -1,10 +1,19 @@
 package com.fragment.android_basic_recyclerview;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -34,18 +43,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        setData();
+        showRecyclerView();
     }
 
     //untuk menampilkan data kedalam recycler view setelah setData()
     private void showRecyclerView() {
-        rv.setLayoutManager((new LinearLayoutManager(this)));
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, list);
-        rv.setAdapter(adapter);
-    }
-
-    //simpan data kedalam Class President
-    public void setData(){
         President president = null;
 
         list = new ArrayList<>();
@@ -59,6 +61,56 @@ public class MainActivity extends AppCompatActivity {
             list.add(president);
         }
 
-        showRecyclerView(); //setelah selesai penyimpanan barulah munculkan kedalam recyler view
+        rv.setLayoutManager((new LinearLayoutManager(this)));
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, list);
+        rv.setAdapter(adapter);
+    }
+
+    //untuk menampilkan data kedalam recycler view setelah setData() dalam bentuk grid
+    private void showGridRecyclerView() {
+        President president = null;
+
+        list = new ArrayList<>();
+
+        for (int i = 0; i <data.length; i++) {
+            president = new President();
+            president.setName(data[i][0]);
+            president.setRemarks(data[i][1]);
+            president.setPhoto(data[i][2]);
+
+            list.add(president);
+        }
+
+        //deteksi orientasi apakah landscape atau potrait
+        if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            rv.setLayoutManager(new GridLayoutManager(this, 2));
+        }else{
+            rv.setLayoutManager(new GridLayoutManager(this, 4));
+        }
+
+        GridRecyclerViewAdapter adapter = new GridRecyclerViewAdapter(this, list);
+        rv.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_item, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.row_view:
+                showRecyclerView();
+                return true;
+            case R.id.grid_view:
+                showGridRecyclerView();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
