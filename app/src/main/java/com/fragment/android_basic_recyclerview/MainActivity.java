@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
             list.add(president);
         }
 
-        rv.setLayoutManager((new LinearLayoutManager(this)));
+        rv.setLayoutManager(new LinearLayoutManager(this));
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, list);
         rv.setAdapter(adapter);
     }
