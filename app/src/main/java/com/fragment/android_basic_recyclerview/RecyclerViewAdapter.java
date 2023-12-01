@@ -4,18 +4,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.fragment.android_basic_recyclerview.databinding.ItemRowPresidentBinding;
 
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.CategoryViewHolder>{
 
@@ -27,24 +23,25 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.list = list;
     }
 
-    @NonNull
     @Override
     public RecyclerViewAdapter.CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //tempat mengenalkan atau menggunakan layout, ini baku ya... kamu cuma ubah nama layoutnya saja
-        View itemRow = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row_president,parent, false);
-        return new CategoryViewHolder(itemRow);
+        // 1. set view holder dengan binding
+        ItemRowPresidentBinding binding = ItemRowPresidentBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        CategoryViewHolder holder = new CategoryViewHolder(binding.getRoot(), binding);
+        return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewAdapter.CategoryViewHolder holder, int position) {
         //tempat memasukkan atau menampilkan data dari class President kedalam layout
-        holder.tvName.setText(list.get(position).getName());
-        holder.tvRemarks.setText(list.get(position).getRemarks());
+        // 3. masukkan nilai ke objek binding
+        holder.binding.tvItemName.setText(list.get(position).getName());
+        holder.binding.tvItemRemarks.setText(list.get(position).getName());
 
         Glide.with(context)
                 .load(list.get(position).getPhoto())
                 .override(55,55)
-                .into(holder.imgPhoto);
+                .into(holder.binding.imgItemPhoto);
 
     }
 
@@ -53,15 +50,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return list.size();
     }
 
+    // 2. set ItemRowPresident disandingkan dengan Categoryview secara binding
     public class CategoryViewHolder extends RecyclerView.ViewHolder {
-        //ini tempat untuk definisikan widget (object texview dsb)
-        @BindView(R.id.tv_item_name) TextView tvName;
-        @BindView(R.id.tv_item_remarks) TextView tvRemarks;
-        @BindView(R.id.img_item_photo) ImageView imgPhoto;
-
-        public CategoryViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
+        private ItemRowPresidentBinding binding;
+        public CategoryViewHolder(View view, ItemRowPresidentBinding binding) {
+            super(view);
+            this.binding = binding;
         }
     }
 }

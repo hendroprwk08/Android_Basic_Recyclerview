@@ -15,14 +15,12 @@ import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.fragment.android_basic_recyclerview.databinding.ActivityMainBinding;
+
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class MainActivity extends AppCompatActivity {
-    @BindView(R.id.recycler_view)
-    RecyclerView rv;
+    private ActivityMainBinding binding;
 
     ArrayList<President> list;
 
@@ -40,8 +38,9 @@ public class MainActivity extends AppCompatActivity {
    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
         showRecyclerView();
     }
@@ -61,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
             list.add(president);
         }
 
-        rv.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, list);
-        rv.setAdapter(adapter);
+        binding.recyclerView.setAdapter(adapter);
     }
 
     //untuk menampilkan data kedalam recycler view setelah setData() dalam bentuk grid
@@ -83,13 +82,13 @@ public class MainActivity extends AppCompatActivity {
 
         //deteksi orientasi apakah landscape atau potrait
         if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            rv.setLayoutManager(new GridLayoutManager(this, 2));
+            binding.recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         }else{
-            rv.setLayoutManager(new GridLayoutManager(this, 4));
+            binding.recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
         }
 
         GridRecyclerViewAdapter adapter = new GridRecyclerViewAdapter(this, list);
-        rv.setAdapter(adapter);
+        binding.recyclerView.setAdapter(adapter);
     }
 
     @Override
